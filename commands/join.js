@@ -41,7 +41,10 @@ module.exports = {
 
     sendRcon(`whitelist add ${args[0]}`).then((reply) => {
       if (
-        reply.toLowerCase() == `added ${args[0].toLowerCase()} to the whitelist`
+        reply.toLowerCase() ==
+          `added ${args[0].toLowerCase()} to the whitelist` ||
+        reply.toLowerCase() ==
+          `§a${args[0].toLowerCase()} has been added to the whitelist`
       ) {
         updatePlayer(id, { whitelisted: true });
         message.reply("You've been added to the whitelist!");
