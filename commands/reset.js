@@ -8,22 +8,31 @@ module.exports = {
   description: 'Reset a player and their Minecraft username!',
   cooldown: 0,
   guildOnly: true,
-  excludeFromHelp: true,
+  excludeFromHelp: false,
   usage: '<[id|mc]> <discordId|minecraftusername>',
   execute(message, args) {
-    if (message.channel.id !== channels.debug) return;
-    let player = {};
-    if (args[0] === 'id') {
-      console.log('Getting by ID: ' + args[1]);
-      player = getPlayer(args[1]);
-    } else if (args[0] === 'mc') {
-      console.log('Getting by MC user: ' + args[1]);
-      player = getByMC(args[1]);
+    if (message.channel.id == channels.debug) {
+      let player = {};
+      if (args[0] === 'id') {
+        console.log('Getting by ID: ' + args[1]);
+        player = getPlayer(args[1]);
+      } else if (args[0] === 'mc') {
+        console.log('Getting by MC user: ' + args[1]);
+        player = getByMC(args[1]);
+      }
+
+      sendRcon(`whitelist remove ${player.minecraftUser}`);
+      removePlayer(player.discordID);
+
+      message.reply('Player has been reset.');
+    } else {
+      let player = {};
+      player = getPlayer(message.author.id);
+
+      sendRcon(`whitelist remove ${player.minecraftUser}`);
+      removePlayer(player.discordID);
+
+      message.reply('Your whitelist account has been reset.');
     }
-
-    sendRcon(`whitelist remove ${player.minecraftUser}`);
-    removePlayer(player.discordID);
-
-    message.reply('Player has been reset.');
   },
 };
