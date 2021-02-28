@@ -40,11 +40,13 @@ module.exports = {
     }
 
     sendRcon(`whitelist add ${args[0]}`).then((reply) => {
-      if (
-        reply.toLowerCase() ==
-          `added ${args[0].toLowerCase()} to the whitelist` ||
-        reply.toLowerCase() == `§a${args[0]} has been added to the whitelist`
-      ) {
+      let encodedReply = JSON.parse(JSON.stringify(reply));
+      const expectedReplies = [
+        `added ${args[0]} to the whitelist`.toLowerCase().trim(),
+        `§a${args[0]} has been added to the whitelist.`.toLowerCase().trim(),
+      ];
+      console.log(expectedReplies);
+      if (expectedReplies.includes(encodedReply.toLowerCase().trim())) {
         updatePlayer(id, { whitelisted: true });
         message.reply("You've been added to the whitelist!");
         message.author.send(
